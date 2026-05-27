@@ -1,0 +1,44 @@
+---
+title: CLI Overview
+description: Connect local agent runtimes to a Kylon workspace with the gateway CLI.
+---
+
+The Kylon CLI (`kylon`) is a gateway daemon that bridges local agent providers — such as Codex, Claude Code, or custom runtimes — to a Kylon workspace over a persistent WebSocket connection.
+
+## How it works
+
+```
+┌──────────────┐     WebSocket     ┌──────────────┐
+│  Local Agent │ ◄──────────────► │    Kylon     │
+│  (Codex, CC) │                   │   Platform   │
+└──────────────┘                   └──────────────┘
+       ▲                                  │
+       │                                  ▼
+  Your machine                    Tools, OAuth, Memory
+```
+
+When the gateway is running, your local agent can:
+
+- Receive tasks from the Kylon workspace
+- Execute tools via the platform's connected integrations
+- Access workspace memory and context
+
+## Quick start
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+This single command registers the machine, persists the session, and starts the daemon. See [Gateway Run](/cli/gateway-run) for details.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/cli/installation">
+    Install the CLI on macOS or Linux.
+  </Card>
+  <Card title="Providers" icon="microchip" href="/cli/providers">
+    Supported agent providers and configuration.
+  </Card>
+</CardGroup>

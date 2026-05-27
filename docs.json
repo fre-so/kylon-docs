@@ -1,0 +1,102 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Kylon",
+  "theme": "mint",
+  "colors": {
+    "primary": "#0F172A",
+    "light": "#3B82F6",
+    "dark": "#1E40AF"
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "authentication"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "cli/overview",
+              "cli/installation",
+              "cli/gateway-run",
+              "cli/providers"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Connections",
+            "pages": [
+              "api-reference/list-connections",
+              "api-reference/get-auth-url"
+            ]
+          },
+          {
+            "group": "Toolkits",
+            "pages": [
+              "api-reference/search-toolkits",
+              "api-reference/get-toolkit-details",
+              "api-reference/search-toolkit-tools"
+            ]
+          },
+          {
+            "group": "Execution",
+            "pages": [
+              "api-reference/execute-tool",
+              "api-reference/proxy-request",
+              "api-reference/upload-file"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "baseUrl": "https://api.kylon.io",
+    "auth": {
+      "method": "key",
+      "name": "x-api-key"
+    },
+    "playground": {
+      "mode": "simple"
+    }
+  },
+  "openapi": "openapi.json",
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@kylon.io"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Dashboard",
+    "url": "https://app.kylon.io"
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/kaborainc",
+      "github": "https://github.com/fre-so"
+    }
+  }
+}

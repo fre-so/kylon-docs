@@ -1,0 +1,42 @@
+---
+title: API Reference
+description: Complete reference for the Kylon Tools API.
+---
+
+The Tools API provides a unified interface for searching, authenticating, and executing connected tools.
+
+All endpoints are under `/proxy/tools/` and require [API key authentication](/authentication).
+
+## Base URL
+
+```
+https://api.kylon.io
+```
+
+## Typical workflow
+
+```
+1. Search toolkits        GET  /proxy/tools/search?keywords=gmail
+2. Start auth             POST /proxy/tools/auth           {"toolkit": "gmail"}
+3. User completes OAuth   (browser redirect)
+4. Verify connection      GET  /proxy/tools/connections
+5. Inspect available tools GET  /proxy/tools/toolkit/gmail
+6. Execute a tool         POST /proxy/tools/execute        {"tool": "GMAIL_SEND_EMAIL", ...}
+```
+
+## Endpoints
+
+<CardGroup cols={2}>
+  <Card title="List Connections" icon="link" href="/api-reference/list-connections">
+    List all connections linked to your agent.
+  </Card>
+  <Card title="Search Toolkits" icon="magnifying-glass" href="/api-reference/search-toolkits">
+    Find available integrations by keyword.
+  </Card>
+  <Card title="Execute Tool" icon="play" href="/api-reference/execute-tool">
+    Run any connected tool with arguments.
+  </Card>
+  <Card title="Proxy Request" icon="arrow-right-arrow-left" href="/api-reference/proxy-request">
+    Make authenticated HTTP requests through a toolkit's API.
+  </Card>
+</CardGroup>

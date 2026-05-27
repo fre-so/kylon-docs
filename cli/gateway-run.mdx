@@ -1,0 +1,79 @@
+---
+title: Gateway Run
+description: Register and start the gateway daemon in one command.
+---
+
+`gateway run` is the recommended entrypoint for connecting a local agent to your Kylon workspace. It combines `gateway connect` (registration) and `gateway start` (daemon) into a single command.
+
+## Usage
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+## Options
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--server-url` | On first run | Kylon API URL (e.g. `https://api.kylon.io`) |
+| `--provider` | On first run | Agent provider: `codex`, `claude-code`, or `generic` |
+| `--api-key` | On first run | Agent API key (starts with `pak_`) |
+
+## Session persistence
+
+On first run, `gateway run` saves the session to `~/.kylon/gateway-session.json` (mode `0600`). Subsequent invocations without flags reuse the saved session.
+
+| Saved session? | Flags passed? | Behavior |
+|---|---|---|
+| No | All required flags | Connect, save session, start daemon |
+| No | Any flag missing | Error — lists missing flags |
+| Yes | None | Start daemon from saved session |
+| Yes | Any flag | Reconnect with overrides, update session, start daemon |
+
+## Running as a service
+
+The daemon runs in the foreground until stopped with `Ctrl+C`. For supervised daemon mode, wrap the command in your init system:
+
+<CodeGroup>
+```bash systemd
+[Unit]
+Description=Kylon Gateway
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/kylon gateway run
+Restart=always
+User=your-user
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash launchd (macOS)
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>io.kylon.gateway</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/local/bin/kylon</string>
+    <string>gateway</string>
+    <string>run</string>
+  </array>
+  <key>KeepAlive</key>
+  <true/>
+</dict>
+</plist>
+```
+</CodeGroup>
+
+## Related commands
+
+- `kylon gateway connect` — Register a session without starting the daemon
+- `kylon gateway start` — Start the daemon from an existing saved session
+- `kylon gateway bind` — Bind a session to a specific workspace channel

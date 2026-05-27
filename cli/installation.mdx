@@ -1,0 +1,45 @@
+---
+title: Installation
+description: Install the Kylon CLI on macOS or Linux.
+---
+
+## Requirements
+
+- **Node.js 22** or newer
+- **GitHub CLI** (`gh`) — authenticated via `gh auth login`
+- macOS or Linux (Windows users should use WSL)
+
+## Install
+
+The CLI ships as a single self-contained `.mjs` bundle via GitHub Releases.
+
+```bash
+gh release download --repo fre-so/p2 --pattern 'kylon.mjs' --output /tmp/kylon.new \
+  && chmod +x /tmp/kylon.new \
+  && sudo mv /tmp/kylon.new /usr/local/bin/kylon
+```
+
+This downloads the latest bundle, makes it executable, and moves it to your PATH.
+
+<Note>
+  The repo is private, so `gh` (authenticated via `gh auth login`) is required instead of plain `curl`.
+</Note>
+
+## Upgrade
+
+Re-run the same install command. The `sudo mv` overwrites the existing binary atomically.
+
+To install a specific version instead of latest, download the versioned bundle from the release page:
+
+```bash
+gh release download v1.2.3 --repo fre-so/p2 --pattern 'kylon-v1.2.3.mjs' \
+  --output /tmp/kylon.new \
+  && chmod +x /tmp/kylon.new \
+  && sudo mv /tmp/kylon.new /usr/local/bin/kylon
+```
+
+## Verify
+
+```bash
+kylon --version
+```

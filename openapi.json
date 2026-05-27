@@ -1,0 +1,533 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kylon Tools API",
+    "description": "Unified API for searching, authenticating, and executing connected tools across native and third-party integrations.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.kylon.io",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "paths": {
+    "/proxy/tools/connections": {
+      "get": {
+        "operationId": "listConnections",
+        "summary": "List connections",
+        "description": "List all connections currently linked to your agent.",
+        "tags": ["Connections"],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "connections": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Connection" }
+                    }
+                  },
+                  "required": ["connections"]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/search": {
+      "get": {
+        "operationId": "searchToolkits",
+        "summary": "Search toolkits",
+        "description": "Search available toolkits by keywords. Returns both native and third-party integrations.",
+        "tags": ["Toolkits"],
+        "parameters": [
+          {
+            "name": "keywords",
+            "in": "query",
+            "required": true,
+            "description": "Search keywords matched against toolkit slug, name, and description.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of results to return.",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Pagination cursor from a previous response.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "toolkits": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/ToolkitSummary" }
+                    },
+                    "nextCursor": {
+                      "type": ["string", "null"],
+                      "description": "Cursor for the next page of results."
+                    }
+                  },
+                  "required": ["toolkits"]
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/auth": {
+      "post": {
+        "operationId": "getAuthUrl",
+        "summary": "Get auth URL",
+        "description": "Start the OAuth flow for a toolkit. Returns a URL to redirect the user to for authorization.",
+        "tags": ["Connections"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "toolkit": {
+                    "type": "string",
+                    "description": "Toolkit slug (from search results)."
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "OAuth scopes to request. If omitted, requests all available scopes."
+                  },
+                  "redirect_url": {
+                    "type": "string",
+                    "description": "URL to redirect the user to after authorization completes."
+                  }
+                },
+                "required": ["toolkit"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string",
+                      "description": "URL to open in a browser to complete the OAuth flow."
+                    }
+                  },
+                  "required": ["redirectUrl"]
+                }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/toolkit/{toolkit}": {
+      "get": {
+        "operationId": "getToolkitDetails",
+        "summary": "Get toolkit details",
+        "description": "Get a toolkit's metadata and the full list of tools it provides, including input parameter schemas.",
+        "tags": ["Toolkits"],
+        "parameters": [
+          {
+            "name": "toolkit",
+            "in": "path",
+            "required": true,
+            "description": "Toolkit slug.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of tools to return.",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Pagination cursor.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "connection_id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by a specific connection.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ToolkitDetails" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/toolkit/{toolkit}/search": {
+      "get": {
+        "operationId": "searchToolkitTools",
+        "summary": "Search toolkit tools",
+        "description": "Search tools within a specific toolkit by query string.",
+        "tags": ["Toolkits"],
+        "parameters": [
+          {
+            "name": "toolkit",
+            "in": "path",
+            "required": true,
+            "description": "Toolkit slug.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Search query to filter tools.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of tools to return.",
+            "schema": { "type": "integer" }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "description": "Pagination cursor.",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "connection_id",
+            "in": "query",
+            "required": false,
+            "description": "Filter by a specific connection.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "tools": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Tool" }
+                    },
+                    "nextCursor": {
+                      "type": ["string", "null"]
+                    }
+                  },
+                  "required": ["tools"]
+                }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/execute": {
+      "post": {
+        "operationId": "executeTool",
+        "summary": "Execute tool",
+        "description": "Execute a specific tool. The system automatically determines which backend to use.",
+        "tags": ["Execution"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "description": "Tool slug (from toolkit details)."
+                  },
+                  "arguments": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Tool-specific arguments."
+                  },
+                  "connection_id": {
+                    "type": "string",
+                    "description": "Specify which connection to use. Required if multiple connections exist for the same toolkit."
+                  }
+                },
+                "required": ["tool"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExecutionResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/proxy": {
+      "post": {
+        "operationId": "proxyRequest",
+        "summary": "Proxy request",
+        "description": "Make an authenticated HTTP request through a native toolkit's API. The system injects the connection's credentials automatically.",
+        "tags": ["Execution"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "toolkit": {
+                    "type": "string",
+                    "description": "Toolkit slug."
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                    "description": "HTTP method."
+                  },
+                  "url": {
+                    "type": "string",
+                    "description": "Full URL to request. Must match the toolkit's registered base URL."
+                  },
+                  "headers": {
+                    "type": "object",
+                    "additionalProperties": { "type": "string" },
+                    "description": "Additional HTTP headers."
+                  },
+                  "body": {
+                    "description": "Request body (for POST/PUT/PATCH)."
+                  },
+                  "connection_id": {
+                    "type": "string",
+                    "description": "Which connection to use."
+                  }
+                },
+                "required": ["toolkit", "method", "url"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ExecutionResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      }
+    },
+    "/proxy/tools/upload": {
+      "post": {
+        "operationId": "uploadFile",
+        "summary": "Upload file",
+        "description": "Upload a file to temporary staging storage. Used for tools that require file uploads (e.g. media uploads).",
+        "tags": ["Execution"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload."
+                  }
+                },
+                "required": ["file"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UploadResult" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "413": {
+            "description": "File too large",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API key for authentication. Can also be passed as `Authorization: Bearer <token>`."
+      }
+    },
+    "schemas": {
+      "Connection": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Connection ID. Use as `connection_id` in other endpoints." },
+          "toolkit": { "type": "string", "description": "Toolkit slug." },
+          "remoteUser": { "type": ["string", "null"], "description": "Remote user identifier (e.g. @handle, email)." },
+          "label": { "type": ["string", "null"], "description": "Human-readable label." },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["id", "toolkit", "createdAt"]
+      },
+      "ToolkitSummary": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string", "description": "Toolkit identifier used in all endpoints." },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": { "type": ["string", "null"], "description": "URL to the toolkit icon." }
+        },
+        "required": ["slug", "name", "description"]
+      },
+      "ToolkitDetails": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "icon": { "type": ["string", "null"] },
+          "tools": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Tool" }
+          }
+        },
+        "required": ["slug", "name", "description", "tools"]
+      },
+      "Tool": {
+        "type": "object",
+        "properties": {
+          "slug": { "type": "string", "description": "Tool identifier used in the execute endpoint." },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "inputParameters": {
+            "description": "JSON Schema describing the expected arguments. Null for tools with dynamic schemas.",
+            "oneOf": [
+              { "type": "object", "additionalProperties": true },
+              { "type": "null" }
+            ]
+          }
+        },
+        "required": ["slug", "name", "description"]
+      },
+      "ExecutionResult": {
+        "type": "object",
+        "properties": {
+          "data": { "description": "Tool execution result data." },
+          "error": { "type": ["string", "null"], "description": "Error message if execution failed." },
+          "successful": { "type": "boolean" }
+        },
+        "required": ["data", "error", "successful"]
+      },
+      "UploadResult": {
+        "type": "object",
+        "properties": {
+          "stagingKey": { "type": "string", "description": "Use this key as the `stagingKey` argument when executing upload-capable tools." },
+          "contentType": { "type": "string" },
+          "size": { "type": "integer", "description": "File size in bytes." }
+        },
+        "required": ["stagingKey", "contentType", "size"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        },
+        "required": ["error"]
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized - invalid or missing API key",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/Error" }
+          }
+        }
+      }
+    }
+  }
+}

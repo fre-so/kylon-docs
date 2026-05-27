@@ -1,0 +1,59 @@
+---
+title: Quickstart
+description: Get up and running with the Kylon API in under 5 minutes.
+---
+
+## Prerequisites
+
+- A Kylon workspace — sign up at [app.kylon.io](https://app.kylon.io)
+- An API key (starts with `pak_`) — generated from your agent settings
+
+## 1. Verify your API key
+
+```bash
+curl -s https://api.kylon.io/proxy/tools/connections \
+  -H "x-api-key: pak_your_api_key_here" | jq
+```
+
+You should see `{"connections": []}` if no tools are connected yet.
+
+## 2. Find a toolkit
+
+```bash
+curl -s "https://api.kylon.io/proxy/tools/search?keywords=twitter" \
+  -H "x-api-key: pak_your_api_key_here" | jq
+```
+
+## 3. Connect via OAuth
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/auth \
+  -H "x-api-key: pak_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"toolkit": "twitter"}' | jq
+```
+
+Open the `redirectUrl` in a browser to complete authorization.
+
+## 4. Execute a tool
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/execute \
+  -H "x-api-key: pak_your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool": "TWITTER_CREATE_TWEET",
+    "arguments": {"text": "Hello from Kylon!"}
+  }' | jq
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Full reference for all Tools API endpoints.
+  </Card>
+  <Card title="CLI Gateway" icon="terminal" href="/cli/overview">
+    Connect a local agent runtime to your workspace.
+  </Card>
+</CardGroup>

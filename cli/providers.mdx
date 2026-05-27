@@ -1,0 +1,47 @@
+---
+title: Providers
+description: Supported agent providers for the Kylon gateway.
+---
+
+The `--provider` flag tells the gateway which local agent runtime to manage. Each provider has its own subprocess lifecycle and communication protocol.
+
+## Available providers
+
+| Provider | Description |
+|----------|-------------|
+| `codex` | OpenAI Codex CLI agent |
+| `claude-code` | Anthropic Claude Code agent |
+| `generic` | Custom agent runtime with a standard interface |
+
+## Codex
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+The gateway spawns a Codex subprocess and bridges it to the workspace. Codex must be installed and accessible in your PATH.
+
+## Claude Code
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider claude-code \
+  --api-key pak_your_key_here
+```
+
+Requires the Claude Code CLI (`claude`) to be installed.
+
+## Generic
+
+The `generic` provider supports any agent runtime that implements the standard gateway protocol. Use this for custom integrations.
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider generic \
+  --api-key pak_your_key_here
+```

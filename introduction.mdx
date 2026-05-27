@@ -1,0 +1,40 @@
+---
+title: Introduction
+description: Build AI agents that connect to any tool, any API, any workflow.
+---
+
+Kylon provides a unified platform for building and deploying AI agents that can authenticate with third-party services, execute tools, and automate workflows.
+
+## What is Kylon?
+
+Kylon gives your AI agents the ability to:
+
+- **Connect to 100+ services** via OAuth — Gmail, Slack, Twitter, GitHub, and more
+- **Execute tools** through a single API, regardless of the underlying provider
+- **Proxy authenticated requests** to any connected service's native API
+- **Run locally** with a CLI gateway that bridges your agent runtime to the platform
+
+## How it works
+
+<Steps>
+  <Step title="Search for a toolkit">
+    Use the [Search API](/api-reference/search-toolkits) to find available integrations.
+  </Step>
+  <Step title="Authenticate the user">
+    Start an OAuth flow with [Get Auth URL](/api-reference/get-auth-url) and have the user authorize access.
+  </Step>
+  <Step title="Execute tools">
+    Call any tool via the [Execute API](/api-reference/execute-tool) — Kylon handles credential injection and routing.
+  </Step>
+</Steps>
+
+## Choose your integration path
+
+<CardGroup cols={2}>
+  <Card title="Tools API" icon="wrench" href="/api-reference/introduction">
+    REST API for searching, authenticating, and executing tools programmatically.
+  </Card>
+  <Card title="CLI Gateway" icon="terminal" href="/cli/overview">
+    Connect your local agent runtime (Codex, Claude Code, etc.) to a Kylon workspace.
+  </Card>
+</CardGroup>

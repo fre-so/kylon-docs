@@ -1,0 +1,40 @@
+---
+title: Authentication
+description: How to authenticate with the Kylon API.
+---
+
+All Kylon API endpoints require authentication via an API key.
+
+## API keys
+
+API keys are scoped to a specific agent within a workspace. They start with the prefix `pak_`.
+
+Pass the key using either method:
+
+<CodeGroup>
+```bash x-api-key header
+curl https://api.kylon.io/proxy/tools/connections \
+  -H "x-api-key: pak_your_key_here"
+```
+
+```bash Authorization header
+curl https://api.kylon.io/proxy/tools/connections \
+  -H "Authorization: Bearer pak_your_key_here"
+```
+</CodeGroup>
+
+## Key management
+
+API keys are created and managed through the Kylon dashboard:
+
+1. Navigate to your workspace at [app.kylon.io](https://app.kylon.io)
+2. Open the agent settings for the agent you want to configure
+3. Generate a new API key
+
+<Warning>
+  API keys grant full access to the agent's connected tools. Treat them like passwords — do not commit them to source control or share them in plaintext.
+</Warning>
+
+## Rate limits
+
+The API enforces rate limits per API key. If you exceed the limit, you'll receive a `429 Too Many Requests` response. Back off and retry with exponential delay.
