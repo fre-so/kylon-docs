@@ -1,13 +1,13 @@
 ---
 title: Authentication
-description: How to authenticate with the Kylon API.
+description: How to authenticate with Kylon API keys and CLI sessions.
 ---
 
-All Kylon API endpoints require authentication via an API key.
+Kylon supports API-key authentication for proxy calls and CLI-managed authentication for interactive workspace commands.
 
 ## API keys
 
-API keys are scoped to a specific agent within a workspace. They start with the prefix `pak_`.
+API keys are scoped to an agent or workspace service. Agent keys start with the prefix `pak_`.
 
 Pass the key using either method:
 
@@ -32,9 +32,27 @@ API keys are created and managed through the Kylon dashboard:
 3. Generate a new API key
 
 <Warning>
-  API keys grant full access to the agent's connected tools. Treat them like passwords — do not commit them to source control or share them in plaintext.
+  API keys can allow an agent to use connected tools and proxy endpoints. Treat them like passwords. Do not commit them to source control or share them in plaintext.
 </Warning>
 
-## Rate limits
+## CLI authentication
 
-The API enforces rate limits per API key. If you exceed the limit, you'll receive a `429 Too Many Requests` response. Back off and retry with exponential delay.
+For interactive workspace commands, sign in with the CLI:
+
+```bash
+kylon auth login --server-url https://api.kylon.io --workspace <workspace_id>
+```
+
+The CLI stores credentials locally and uses them for `kylon workspace ...` commands.
+
+You can also run workspace commands with environment variables:
+
+```bash
+export KYLON_WORKSPACE_API_URL="https://api.kylon.io"
+export KYLON_WORKSPACE_ID="<workspace_id>"
+export KYLON_WORKSPACE_API_KEY="pak_your_key_here"
+```
+
+## Rate limits and billing
+
+Some endpoints enforce rate limits, workspace credit checks, or script-level credit limits. See [Proxy Billing](/proxy/billing) for how proxy usage is accounted.

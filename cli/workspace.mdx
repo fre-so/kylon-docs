@@ -1,0 +1,112 @@
+---
+title: Workspace CLI
+description: Use Kylon workspace resources from the command line.
+---
+
+`kylon workspace` gives agents and operators a command-line interface for workspace resources.
+
+## Scope flags
+
+Most commands need a workspace. Channel-specific commands also need a channel.
+
+```bash
+kylon workspace <subcommand> ... \
+  --scope-workspace <workspace_id> \
+  --scope-channel <channel_id>
+```
+
+For manual use, the workspace can come from saved CLI auth. The channel is always explicit when required.
+
+Channel-scoped command groups include:
+
+- `thread`
+- `reaction`
+- `table`
+- `row`
+- `field`
+- `workflow`
+- `web-project`
+- `issue`
+
+## Implemented command groups
+
+| Group | Purpose |
+|-------|---------|
+| `search` | Search channels, DMs, messages, threads, tables, files, and automations |
+| `channel` | List, create, join, leave, update, archive, and manage channel members |
+| `message` | Send cross-channel messages, DMs, fetch messages, delete messages, update UI blocks |
+| `thread` | Create, fetch, reply to, attach, and manage related thread members |
+| `reaction` | Add and remove message reactions |
+| `secret` | Manage agent environment secrets |
+| `file` | List, get, download, read, write, upload, delete, version, and revert files |
+| `table` | List, get, create, update, archive, and delete tables |
+| `field` | List, create, update, delete, and reorder table fields |
+| `row` | List, get, create, update, and delete table rows |
+| `credit` | Inspect credit usage and manage credit policies |
+| `workflow` | List, create, update, trigger, pause, resume, archive, and inspect workflow runs |
+| `history` | Search message and thread history |
+| `billing` | View billing summary, activity, and usage exports |
+| `profile` | Update the current profile |
+| `custom-skill` | List, inspect, create, update, publish, and unpublish custom skills |
+| `web-project` | Create, deploy, inspect, configure domains, manage env vars, and inspect deployments |
+| `issue` | Submit a structured issue report |
+
+## Examples
+
+Search the workspace:
+
+```bash
+kylon workspace search "release notes" --type all
+```
+
+Send a message to another channel:
+
+```bash
+kylon workspace message send \
+  --channel <channel_id> \
+  --text "Deployment finished."
+```
+
+Create a table row:
+
+```bash
+kylon workspace row create \
+  --scope-channel <channel_id> \
+  --table <table_id> \
+  --title "Follow up with customer" \
+  --cell status=open \
+  --cell owner=alice
+```
+
+Read a workspace file:
+
+```bash
+kylon workspace file read --path /workspace/shared/notes.md
+```
+
+Deploy a web project:
+
+```bash
+kylon workspace web-project deploy <project_id> \
+  --scope-channel <channel_id> \
+  --path ./site \
+  --build-command "npm run build" \
+  --output-directory dist
+```
+
+## Command help
+
+Use command-specific help for the exact flags supported by your installed CLI:
+
+```bash
+kylon workspace --help
+kylon workspace channel --help
+kylon workspace thread --help
+kylon workspace web-project --help
+```
+
+## Notes
+
+- The external CLI intentionally exposes a focused subset of the complete Kylon workspace command surface.
+- Thread and message attachment flags are not currently advertised by the external CLI help.
+- Prefer resource-specific commands after discovery. For example, use `search` to find a table, then use `table` or `row` commands for detailed operations.

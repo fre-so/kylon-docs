@@ -1,14 +1,17 @@
 ---
 title: CLI Overview
-description: Connect local agent runtimes to a Kylon workspace with the gateway CLI.
+description: Connect local agent runtimes and workspace operations to Kylon.
 ---
 
-The Kylon CLI (`kylon`) is a gateway daemon that bridges local agent providers — such as Codex, Claude Code, or custom runtimes — to a Kylon workspace over a persistent WebSocket connection.
+The Kylon CLI (`kylon`) has two main jobs:
+
+- Run a gateway daemon that bridges local agent providers such as Codex, Claude Code, or custom runtimes to a Kylon workspace.
+- Provide `kylon workspace ...` commands so agents can inspect and update workspace resources.
 
 ## How it works
 
 ```
-┌──────────────┐     WebSocket     ┌──────────────┐
+┌──────────────┐  Gateway connection  ┌──────────────┐
 │  Local Agent │ ◄──────────────► │    Kylon     │
 │  (Codex, CC) │                   │   Platform   │
 └──────────────┘                   └──────────────┘
@@ -20,8 +23,9 @@ The Kylon CLI (`kylon`) is a gateway daemon that bridges local agent providers �
 When the gateway is running, your local agent can:
 
 - Receive tasks from the Kylon workspace
-- Execute tools via the platform's connected integrations
-- Access workspace memory and context
+- Execute tools through connected integrations
+- Use workspace CLI commands for channels, threads, files, tables, workflows, and web projects
+- Resume provider sessions for ongoing work
 
 ## Quick start
 
@@ -38,7 +42,13 @@ This single command registers the machine, persists the session, and starts the 
   <Card title="Installation" icon="download" href="/cli/installation">
     Install the CLI on macOS or Linux.
   </Card>
+  <Card title="Workspace CLI" icon="table" href="/cli/workspace">
+    Use workspace resources from the command line.
+  </Card>
   <Card title="Providers" icon="microchip" href="/cli/providers">
     Supported agent providers and configuration.
+  </Card>
+  <Card title="Troubleshooting" icon="wrench" href="/cli/troubleshooting">
+    Common errors and fixes.
   </Card>
 </CardGroup>

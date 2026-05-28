@@ -1,0 +1,129 @@
+---
+title: Provider Proxy APIs
+description: Supported non-model provider routes.
+---
+
+Kylon also exposes selected provider-specific routes for data and automation workflows.
+
+## Apify
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/apify/store` |
+| `GET` | `/proxy/apify/actors/:actorId/builds/default` |
+| `POST` | `/proxy/apify/actors/:actorId/runs` |
+| `POST` | `/proxy/apify/actors/:actorId/run-sync-get-dataset-items` |
+| `GET` | `/proxy/apify/runs/:runId` |
+| `GET` | `/proxy/apify/runs/:runId/dataset/items` |
+| `GET` | `/proxy/apify/runs/:runId/log` |
+| `POST` | `/proxy/apify/runs/:runId/abort` |
+| `GET` | `/proxy/apify/key-value-stores/:storeId/records/:recordKey` |
+
+## Apollo
+
+| Method | Path |
+|--------|------|
+| `POST` | `/proxy/apollo/mixed_people/api_search` |
+| `POST` | `/proxy/apollo/mixed_companies/search` |
+| `POST` | `/proxy/apollo/people/match` |
+| `POST` | `/proxy/apollo/people/bulk_match` |
+| `POST` | `/proxy/apollo/organizations/enrich` |
+| `POST` | `/proxy/apollo/organizations/bulk_enrich` |
+| `GET` | `/proxy/apollo/organizations/:organizationId/job_postings` |
+| `GET` | `/proxy/apollo/organizations/:organizationId` |
+| `POST` | `/proxy/apollo/news_articles/search` |
+
+## FastMoss
+
+| Method | Path |
+|--------|------|
+| `POST` | `/proxy/fastmoss/creator/v1/categoryInfo` |
+| `POST` | `/proxy/fastmoss/creator/v1/search` |
+| `POST` | `/proxy/fastmoss/creator/v1/rank/topGrowth` |
+| `POST` | `/proxy/fastmoss/creator/v1/rank/topEcommerce` |
+| `POST` | `/proxy/fastmoss/creator/v1/rank/topBlueVGrowth` |
+| `POST` | `/proxy/fastmoss/creator/v1/rank/topFollowers` |
+| `POST` | `/proxy/fastmoss/creator/v1/productList` |
+| `POST` | `/proxy/fastmoss/shop/v1/search` |
+| `POST` | `/proxy/fastmoss/shop/v1/productList` |
+| `POST` | `/proxy/fastmoss/shop/v1/creatorList` |
+| `POST` | `/proxy/fastmoss/shop/v1/videoList` |
+| `POST` | `/proxy/fastmoss/product/v1/categoryInfo` |
+| `POST` | `/proxy/fastmoss/product/v1/search` |
+| `POST` | `/proxy/fastmoss/product/v1/goodListByShopName` |
+| `POST` | `/proxy/fastmoss/product/v1/goodSalesList` |
+| `POST` | `/proxy/fastmoss/product/v1/videoList` |
+| `POST` | `/proxy/fastmoss/product/v1/creatorList` |
+| `POST` | `/proxy/fastmoss/product/v1/rank/topSelling` |
+| `POST` | `/proxy/fastmoss/video/v1/search` |
+| `POST` | `/proxy/fastmoss/live/v1/search` |
+
+## Flightradar24
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/flightradar24/live/flight-positions/light` |
+| `GET` | `/proxy/flightradar24/live/flight-positions/full` |
+| `GET` | `/proxy/flightradar24/live/flight-positions/count` |
+| `GET` | `/proxy/flightradar24/historic/flight-positions/full` |
+| `GET` | `/proxy/flightradar24/historic/flight-positions/light` |
+| `GET` | `/proxy/flightradar24/historic/flight-positions/count` |
+| `GET` | `/proxy/flightradar24/flight-summary/full` |
+| `GET` | `/proxy/flightradar24/flight-summary/light` |
+| `GET` | `/proxy/flightradar24/flight-summary/count` |
+| `GET` | `/proxy/flightradar24/flight-tracks` |
+| `GET` | `/proxy/flightradar24/static/airlines/:icao/light` |
+| `GET` | `/proxy/flightradar24/static/airports/:code/light` |
+| `GET` | `/proxy/flightradar24/static/airports/:code/full` |
+| `GET` | `/proxy/flightradar24/historic/flight-events/full` |
+| `GET` | `/proxy/flightradar24/historic/flight-events/light` |
+
+## Logo.dev
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/logo-dev/logo-url` |
+| `GET` | `/proxy/logo-dev/search` |
+| `GET` | `/proxy/logo-dev/describe/:domain` |
+
+## Places
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/places/autocomplete` |
+| `GET` | `/proxy/places/nearby` |
+| `GET` | `/proxy/places/search` |
+| `GET` | `/proxy/places/search/route` |
+| `GET` | `/proxy/places/directions` |
+| `GET` | `/proxy/places/details/:placeId` |
+| `GET` | `/proxy/places/photo` |
+| `GET` | `/proxy/places/resolve` |
+
+## ScrapeCreators
+
+Instagram:
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/scrapecreators/instagram/profile` |
+| `GET` | `/proxy/scrapecreators/instagram/user/posts` |
+| `GET` | `/proxy/scrapecreators/instagram/user/reels` |
+| `GET` | `/proxy/scrapecreators/instagram/post` |
+| `GET` | `/proxy/scrapecreators/instagram/post/comments` |
+| `GET` | `/proxy/scrapecreators/instagram/reels/search` |
+
+TikTok:
+
+| Method | Path |
+|--------|------|
+| `GET` | `/proxy/scrapecreators/tiktok/profile` |
+| `GET` | `/proxy/scrapecreators/tiktok/profile/videos` |
+| `GET` | `/proxy/scrapecreators/tiktok/video` |
+| `GET` | `/proxy/scrapecreators/tiktok/video/comments` |
+| `GET` | `/proxy/scrapecreators/tiktok/search/top` |
+| `GET` | `/proxy/scrapecreators/tiktok/search/users` |
+| `GET` | `/proxy/scrapecreators/tiktok/search/keyword` |
+| `GET` | `/proxy/scrapecreators/tiktok/search/hashtag` |
+| `GET` | `/proxy/scrapecreators/tiktok/song` |
+| `GET` | `/proxy/scrapecreators/tiktok/song/videos` |
+| `GET` | `/proxy/scrapecreators/tiktok/video/transcript` |

@@ -1,0 +1,51 @@
+---
+title: Proxy Billing
+description: How Kylon accounts for proxy usage.
+---
+
+Kylon proxy calls are checked and recorded against workspace credits where applicable.
+
+## Preflight checks
+
+Before a proxy request is sent to a provider, Kylon may check:
+
+- Whether the workspace has enough credits
+- Whether the request is allowed by a script-level credit policy
+- Whether the agent has access to the requested provider capability
+
+If a credit check fails, the proxy returns `402 payment_required`.
+
+## Fixed-cost endpoints
+
+Some endpoints have fixed credit costs. Examples include:
+
+| Endpoint family | Typical fixed cost behavior |
+|-----------------|-----------------------------|
+| Tools execute/proxy | Fixed low-cost request accounting |
+| Google-style search helpers | Fixed low-cost request accounting |
+| Apollo search/enrich endpoints | Fixed per-request accounting |
+| FastMoss endpoints | Fixed per-request accounting by endpoint |
+| Places endpoints | Fixed per-request accounting |
+| Logo.dev endpoints | Fixed per-request accounting |
+| ScrapeCreators endpoints | Provider response may include its own credit estimate, with a default fallback |
+
+## Dynamic-cost endpoints
+
+Some providers are accounted from returned usage:
+
+| Provider family | Usage signal |
+|-----------------|--------------|
+| OpenAI-compatible model routes | Token and image usage |
+| Anthropic-compatible model routes | Token usage |
+| Gemini-compatible model routes | Token and media usage metadata |
+| Cerebras-compatible model routes | Token usage |
+| ElevenLabs-compatible routes | Character usage |
+| Apify actor runs | Actor compute units |
+
+## Streaming requests
+
+For streaming model requests, Kylon records usage after the stream completes or disconnects. If the client disconnects, the request is stopped and recorded as disconnected.
+
+## Error accounting
+
+Failed provider requests are still recorded with status code, provider, endpoint, model when available, and a short error summary. This helps teams understand which calls are failing and why.

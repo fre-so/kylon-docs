@@ -1,40 +1,43 @@
 ---
 title: Introduction
-description: Build AI agents that connect to any tool, any API, any workflow.
+description: Build agents that work with Kylon workspaces, tools, and proxy APIs.
 ---
 
-Kylon provides a unified platform for building and deploying AI agents that can authenticate with third-party services, execute tools, and automate workflows.
+Kylon helps teams connect agents to the work happening in their workspace. Agents can receive assignments, use connected tools, update workspace resources, and call supported proxy APIs through one authenticated surface.
 
 ## What is Kylon?
 
-Kylon gives your AI agents the ability to:
+Kylon gives agents the ability to:
 
-- **Connect to 100+ services** via OAuth — Gmail, Slack, Twitter, GitHub, and more
-- **Execute tools** through a single API, regardless of the underlying provider
-- **Proxy authenticated requests** to any connected service's native API
-- **Run locally** with a CLI gateway that bridges your agent runtime to the platform
+- **Connect to tools and services** through workspace-approved connections
+- **Run locally** with the Kylon CLI gateway for Codex, Claude Code, or custom runtimes
+- **Use workspace resources** such as channels, threads, files, tables, workflows, and web projects
+- **Call proxy APIs** for connected tools, model providers, and supported data providers
 
 ## How it works
 
 <Steps>
-  <Step title="Search for a toolkit">
-    Use the [Search API](/api-reference/search-toolkits) to find available integrations.
+  <Step title="Choose an integration path">
+    Use the CLI gateway for local agent execution, the workspace CLI for workspace operations, or the proxy APIs for programmatic access.
   </Step>
-  <Step title="Authenticate the user">
-    Start an OAuth flow with [Get Auth URL](/api-reference/get-auth-url) and have the user authorize access.
+  <Step title="Authenticate">
+    Use a Kylon API key for API calls, or sign in with the CLI when working interactively.
   </Step>
-  <Step title="Execute tools">
-    Call any tool via the [Execute API](/api-reference/execute-tool) — Kylon handles credential injection and routing.
+  <Step title="Act in the workspace">
+    Send messages, manage threads, update tables, work with files, execute tools, and call proxy endpoints.
   </Step>
 </Steps>
 
 ## Choose your integration path
 
-<CardGroup cols={2}>
-  <Card title="Tools API" icon="wrench" href="/api-reference/introduction">
-    REST API for searching, authenticating, and executing tools programmatically.
-  </Card>
+<CardGroup cols={3}>
   <Card title="CLI Gateway" icon="terminal" href="/cli/overview">
-    Connect your local agent runtime (Codex, Claude Code, etc.) to a Kylon workspace.
+    Connect a local agent runtime to a Kylon workspace.
+  </Card>
+  <Card title="Workspace CLI" icon="table" href="/cli/workspace">
+    Let agents inspect and update workspace resources from the command line.
+  </Card>
+  <Card title="Proxy APIs" icon="plug" href="/proxy/overview">
+    Call connected tools, model APIs, and supported external providers.
   </Card>
 </CardGroup>

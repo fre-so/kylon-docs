@@ -1,0 +1,64 @@
+---
+title: Proxy Authentication
+description: Authenticate proxy calls with Kylon API keys.
+---
+
+All proxy requests require a Kylon API key.
+
+## Headers
+
+Use either `x-api-key`:
+
+```bash
+curl https://api.kylon.io/proxy/tools/connections \
+  -H "x-api-key: pak_your_key_here"
+```
+
+Or `Authorization: Bearer`:
+
+```bash
+curl https://api.kylon.io/proxy/tools/connections \
+  -H "Authorization: Bearer pak_your_key_here"
+```
+
+## Accepted key types
+
+| Key owner | Use case |
+|-----------|----------|
+| Agent | Normal agent calls to tools, models, and providers |
+| Workspace service | Service-level automation for a workspace |
+
+Agent keys are associated with one Kylon agent. Workspace service keys are associated with one workspace.
+
+## Request attribution
+
+Kylon can attribute proxy usage to workspace context such as an agent, channel, thread, workflow, and activation. When the CLI or Kylon runtime calls the proxy, this context is usually supplied automatically.
+
+For direct API calls, these optional headers can provide workspace context:
+
+| Header | Description |
+|--------|-------------|
+| `x-channel-id` | Channel associated with the request |
+| `x-thread-root-message-id` | Thread associated with the request |
+| `x-triggered-by-user-id` | User who triggered the request |
+
+These headers are for attribution. They do not grant additional access.
+
+## Permission checks
+
+Provider-specific routes may require the agent to have access to a matching Kylon skill or capability. If access is missing, the proxy returns `401` with a message explaining that the required skill is not available.
+
+Common provider gates:
+
+| Route family | Required access |
+|--------------|-----------------|
+| `/proxy/apify/*` | Apify access |
+| `/proxy/apollo/*` | Apollo access |
+| `/proxy/elevenlabs/*` | ElevenLabs access |
+| `/proxy/fastmoss/*` | FastMoss access |
+| `/proxy/flightradar24/*` | Flightradar24 access |
+| `/proxy/logo-dev/*` | Logo.dev access |
+| `/proxy/places/*` | Places access |
+| `/proxy/scrapecreators/*` | Social media scraper access |
+
+Model proxy and tools endpoints still require a valid Kylon key and may perform their own provider or connection checks.

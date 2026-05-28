@@ -1,0 +1,86 @@
+---
+title: Proxy Errors
+description: Common proxy error shapes and how to respond.
+---
+
+Kylon proxy endpoints return provider-compatible errors where practical. Shared proxy errors use a small JSON shape.
+
+## Missing or invalid API key
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Missing API key"
+}
+```
+
+or:
+
+```json
+{
+  "error": "unauthorized",
+  "message": "Invalid API key"
+}
+```
+
+Fix: pass a valid Kylon key using `x-api-key` or `Authorization: Bearer`.
+
+## Missing provider access
+
+```json
+{
+  "error": "unauthorized",
+  "message": "No access to the required skill. Please check the agent skill settings."
+}
+```
+
+Fix: enable the required provider capability for the agent, or call an endpoint the agent is allowed to use.
+
+## Missing request fields
+
+Some endpoints validate required fields directly:
+
+```json
+{
+  "error": "Missing required fields: toolkit, method, url"
+}
+```
+
+Fix: check the endpoint documentation and include the required fields.
+
+## Payment required
+
+```json
+{
+  "error": "payment_required",
+  "code": "payment_required",
+  "message": "Workspace credits are unavailable or exhausted",
+  "details": {}
+}
+```
+
+Fix: add credits, reduce usage, or retry after a script-level limit resets.
+
+## Provider errors
+
+Buffered provider proxy routes generally return:
+
+```json
+{
+  "error": "proxy_error",
+  "message": "Provider error message"
+}
+```
+
+Model-compatible routes may return provider-shaped errors instead, such as OpenAI-style or Anthropic-style error objects.
+
+## Retry guidance
+
+| Status | Recommended action |
+|--------|--------------------|
+| `400` | Fix the request shape or missing fields |
+| `401` | Check API key and provider access |
+| `402` | Check credits or script-level credit policy |
+| `429` | Back off and retry with jitter |
+| `499` | Client disconnected; retry if still needed |
+| `5xx` | Retry with exponential backoff if the operation is idempotent |
