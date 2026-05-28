@@ -5,11 +5,7 @@
   "colors": {
     "primary": "#045C45",
     "light": "#12A594",
-    "dark": "#19DBC4",
-    "background": {
-      "light": "#FFFFFF",
-      "dark": "#242424"
-    }
+    "dark": "#19DBC4"
   },
   "logo": {
     "light": "/logo/light.svg",
