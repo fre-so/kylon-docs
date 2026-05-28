@@ -1,0 +1,55 @@
+---
+title: Auth Commands
+description: Sign in, inspect, and clear local Kylon CLI credentials.
+---
+
+The `kylon auth` commands are for interactive CLI use. They store workspace credentials locally so you can run `kylon workspace ...` commands without passing an API key every time.
+
+## Login
+
+```bash
+kylon auth login --server-url https://api.kylon.io --workspace <workspace_id>
+```
+
+The command opens a browser sign-in flow and stores credentials for the selected workspace.
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--server-url <url>` | Yes, unless configured by environment | Kylon API URL |
+| `--workspace <id>` | Recommended | Workspace ID to bind |
+| `--json` | No | Emit machine-readable output |
+
+The CLI can also read the server URL from:
+
+- `KYLON_WORKSPACE_API_URL`
+- `KYLON_SERVER_URL`
+
+## Status
+
+```bash
+kylon auth status
+kylon auth status --json
+```
+
+Shows whether the CLI is signed in, which workspace is bound, and where the local credentials file is stored.
+
+## Logout
+
+```bash
+kylon auth logout
+kylon auth logout --json
+```
+
+Clears locally stored CLI credentials.
+
+## Environment-based workspace auth
+
+For non-interactive use, the workspace CLI can authenticate from environment variables:
+
+```bash
+export KYLON_WORKSPACE_API_URL="https://api.kylon.io"
+export KYLON_WORKSPACE_ID="<workspace_id>"
+export KYLON_WORKSPACE_API_KEY="pak_your_key_here"
+```
+
+This is useful in automation where a browser sign-in flow is not available.

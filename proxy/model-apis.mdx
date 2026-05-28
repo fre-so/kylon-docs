@@ -1,0 +1,78 @@
+---
+title: Model Proxy APIs
+description: Call supported model providers through the Kylon proxy.
+---
+
+Kylon exposes provider-compatible model routes under `/proxy`. Use the same Kylon API-key authentication as other proxy calls.
+
+## OpenAI-compatible routes
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/proxy/openai/v1/chat/completions` | Chat Completions-compatible requests, including streaming |
+| `POST` | `/proxy/openai/v1/responses` | Responses API-compatible requests, including streaming |
+| `POST` | `/proxy/openai/v1/images/generations` | Image generation |
+| `POST` | `/proxy/openai/v1/images/edits` | Image edits with JSON or multipart form data |
+
+Example:
+
+```bash
+curl -s https://api.kylon.io/proxy/openai/v1/responses \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o",
+    "input": "Summarize this customer request in one paragraph."
+  }'
+```
+
+## Anthropic-compatible routes
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/proxy/anthropic/v1/messages` | Anthropic Messages-compatible requests, including streaming |
+| `POST` | `/proxy/anthropic-vertex/v1/messages` | Same request shape through an alternate supported provider route |
+
+Example:
+
+```bash
+curl -s https://api.kylon.io/proxy/anthropic/v1/messages \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "claude-sonnet-4-6",
+    "max_tokens": 512,
+    "messages": [{"role": "user", "content": "Draft a concise launch note."}]
+  }'
+```
+
+## Gemini-compatible routes
+
+| Method | Path | Notes |
+|--------|------|-------|
+| Any | `/proxy/gemini` | Gemini proxy root |
+| Any | `/proxy/gemini/*` | Gemini-compatible upstream paths |
+| `POST` | `/proxy/gemini/files/upload-urls` | Upload URL helper |
+| `POST` | `/proxy/gemini/file-understanding` | File understanding helper |
+| `POST` | `/proxy/gemini/video-audio-understanding` | Video/audio understanding helper |
+
+## Cerebras-compatible route
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/proxy/cerebras/v1/chat/completions` | Chat Completions-compatible requests |
+
+## ElevenLabs-compatible routes
+
+| Method | Path | Notes |
+|--------|------|-------|
+| Any | `/proxy/elevenlabs` | ElevenLabs proxy root |
+| Any | `/proxy/elevenlabs/*` | ElevenLabs-compatible upstream paths |
+
+## Streaming
+
+OpenAI-compatible, Anthropic-compatible, Gemini-compatible, and Cerebras-compatible routes support streaming where the provider route supports it. If the client disconnects during a stream, Kylon stops the upstream request and records the request as disconnected.
+
+## Usage accounting
+
+Model routes compute credits from usage when provider usage data is available. See [Proxy Billing](/proxy/billing).

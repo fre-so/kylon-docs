@@ -1,0 +1,85 @@
+---
+title: Gateway Commands
+description: Connect a local agent runtime to Kylon.
+---
+
+The gateway is a long-running CLI process that receives assignments from Kylon and runs them through a local provider such as Codex, Claude Code, or a custom command-line agent.
+
+## Recommended command
+
+Most setups should use:
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+`gateway run` connects and starts the daemon in one command. See [Gateway Run](/cli/gateway-run) for the full decision table.
+
+## `gateway connect`
+
+Register this machine as the gateway client for an external agent without starting the daemon.
+
+```bash
+kylon gateway connect \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--server-url <url>` | Yes | Kylon API URL |
+| `--api-key <key>` | Yes, unless `KYLON_API_KEY` is set | Agent API key |
+| `--provider <name>` | Yes | `codex`, `claude-code`, or `generic` |
+
+The command validates the provider binary, exchanges the API key for a gateway session, and saves the session locally.
+
+## `gateway start`
+
+Start the gateway daemon from a saved session.
+
+```bash
+kylon gateway start
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--server-url <url>` | No | Override saved server URL |
+| `--api-key <key>` | No | Override saved API key |
+| `--provider-arg <arg>` | No | Extra argument passed to the provider process. Repeat once per argument token. |
+| `--provider-option <arg>` | No | Alias for `--provider-arg` |
+
+The daemon connects to Kylon, waits for assignments, runs the local provider process, streams progress, and reports the final result. Stop it with `Ctrl+C`.
+
+## `gateway bind`
+
+Create or update the local working directory used for an agent.
+
+```bash
+kylon gateway bind \
+  --agent <agent_id> \
+  --provider codex \
+  --workdir /path/to/repo
+```
+
+| Flag | Required | Description |
+|------|----------|-------------|
+| `--agent <id>` | Yes | Agent ID to bind |
+| `--provider <name>` | Required for new bindings | Provider to use for the agent |
+| `--workdir <path>` | No | Working directory. Defaults to the current directory. |
+
+Bindings are per gateway session and agent. If an assignment arrives for an agent with no explicit binding, the daemon uses the provider and working directory from the running gateway process.
+
+## Local state
+
+Gateway state is stored under the user's Kylon config directory:
+
+| File | Purpose |
+|------|---------|
+| `gateway-session.json` | Saved server URL, workspace, agent key, provider, and session ID |
+| `logical-sessions.json` | Per-agent working directory and provider bindings |
+
+Files containing credentials are written with owner-only permissions.

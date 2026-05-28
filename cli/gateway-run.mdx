@@ -21,6 +21,10 @@ kylon gateway run \
 | `--server-url` | On first run | Kylon API URL (e.g. `https://api.kylon.io`) |
 | `--provider` | On first run | Agent provider: `codex`, `claude-code`, or `generic` |
 | `--api-key` | On first run | Agent API key (starts with `pak_`) |
+| `--provider-arg` | No | Extra argument passed to the provider process. Repeat once per argument token. |
+| `--provider-option` | No | Alias for `--provider-arg` |
+
+You can set `KYLON_API_KEY` instead of passing `--api-key`. On a saved session, `KYLON_API_KEY` changes the key used by `gateway start`, but it does not by itself trigger a reconnect.
 
 ## Session persistence
 
@@ -76,4 +80,4 @@ WantedBy=multi-user.target
 
 - `kylon gateway connect` — Register a session without starting the daemon
 - `kylon gateway start` — Start the daemon from an existing saved session
-- `kylon gateway bind` — Bind a session to a specific workspace channel
+- `kylon gateway bind` — Bind an agent to a provider and working directory

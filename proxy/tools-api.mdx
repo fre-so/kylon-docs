@@ -1,0 +1,142 @@
+---
+title: Tools API
+description: Search, authorize, inspect, execute, proxy, and upload through Kylon tools.
+---
+
+The Tools API is the primary proxy surface for connected integrations.
+
+## List connections
+
+```bash
+curl -s https://api.kylon.io/proxy/tools/connections \
+  -H "x-api-key: pak_your_key_here" | jq
+```
+
+Returns the connections currently linked to the calling agent.
+
+## Search toolkits
+
+```bash
+curl -s "https://api.kylon.io/proxy/tools/search?keywords=gmail&limit=10" \
+  -H "x-api-key: pak_your_key_here" | jq
+```
+
+Query parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `keywords` | Required search string |
+| `limit` | Optional result limit |
+| `cursor` | Optional pagination cursor |
+
+## Start toolkit authorization
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/auth \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "toolkit": "gmail",
+    "redirect_url": "https://example.com/connected"
+  }' | jq
+```
+
+The response includes a redirect URL. Open it in a browser so the user can authorize the toolkit.
+
+## Get toolkit details
+
+```bash
+curl -s "https://api.kylon.io/proxy/tools/toolkit/gmail?limit=20" \
+  -H "x-api-key: pak_your_key_here" | jq
+```
+
+Returns toolkit metadata and available tools, including input schemas where available.
+
+## Search tools within a toolkit
+
+```bash
+curl -s "https://api.kylon.io/proxy/tools/toolkit/gmail/search?q=draft&limit=10" \
+  -H "x-api-key: pak_your_key_here" | jq
+```
+
+Query parameters:
+
+| Parameter | Description |
+|-----------|-------------|
+| `q` | Search query |
+| `limit` | Optional result limit |
+| `cursor` | Optional pagination cursor |
+| `connection_id` | Optional connection filter |
+
+## Execute a tool
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/execute \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tool": "GMAIL_SEND_EMAIL",
+    "arguments": {
+      "to": "person@example.com",
+      "subject": "Hello from Kylon",
+      "body": "This was sent through a connected tool."
+    }
+  }' | jq
+```
+
+Request body:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `tool` | Yes | Tool slug/name |
+| `arguments` | No | Tool input object |
+| `connection_id` | No | Specific connection to use |
+
+## Proxy a native toolkit request
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/proxy \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "toolkit": "github",
+    "method": "GET",
+    "url": "https://api.github.com/user/repos"
+  }' | jq
+```
+
+This endpoint is for toolkit-native API calls where Kylon manages the connection credentials.
+
+Request body:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `toolkit` | Yes | Toolkit slug |
+| `method` | Yes | HTTP method |
+| `url` | Yes | Target provider URL |
+| `headers` | No | Additional request headers |
+| `body` | No | Request body |
+| `connection_id` | No | Specific connection to use |
+
+## Upload media for tool use
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/tools/upload \
+  -H "x-api-key: pak_your_key_here" \
+  -F "file=@./image.png" | jq
+```
+
+Uploads media to Kylon staging and returns a reference usable by supported tool calls.
+
+## OpenAPI reference
+
+The current generated API reference covers each Tools API endpoint:
+
+- [List Connections](/api-reference/list-connections)
+- [Search Toolkits](/api-reference/search-toolkits)
+- [Get Auth URL](/api-reference/get-auth-url)
+- [Get Toolkit Details](/api-reference/get-toolkit-details)
+- [Search Toolkit Tools](/api-reference/search-toolkit-tools)
+- [Execute Tool](/api-reference/execute-tool)
+- [Proxy Request](/api-reference/proxy-request)
+- [Upload File](/api-reference/upload-file)

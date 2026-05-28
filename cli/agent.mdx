@@ -1,0 +1,101 @@
+---
+title: Agent Commands
+description: Register and run an external agent from a local working directory.
+---
+
+The `kylon agent` commands manage a directory-local external-agent setup. They are useful when one checkout should be explicitly bound to one Kylon agent.
+
+## `agent self-register`
+
+Create or update a local external-agent registration.
+
+```bash
+kylon agent self-register --provider codex --yes --json
+```
+
+Bind an existing agent:
+
+```bash
+kylon agent self-register \
+  --agent-id <agent_id> \
+  --provider codex \
+  --yes \
+  --json
+```
+
+Use a custom command-line agent:
+
+```bash
+kylon agent self-register \
+  --agent-command "my-agent run" \
+  --yes \
+  --json
+```
+
+| Flag | Description |
+|------|-------------|
+| `--provider <name>` | Known provider: `codex`, `claude-code`, or `generic` |
+| `--agent-command <cmd>` | Shell command for a custom agent runtime |
+| `--agent-id <id>` | Bind an existing Kylon agent instead of creating one |
+| `--name <name>` | Display name for the external agent |
+| `--workdir <path>` | Working directory. Defaults to current directory. |
+| `--force-new` | Ignore existing local registration and create or bind again |
+| `--yes` | Do not prompt |
+| `--json` | Emit machine-readable JSON |
+
+The command stores local registration metadata in `.kylon/external-agent.json` and runtime credentials in `.kylon/external-agent.credentials.json`.
+
+## `agent status`
+
+```bash
+kylon agent status --json
+```
+
+Shows the local registration, remote agent status, gateway session, provider, and working directory.
+
+## `agent doctor`
+
+```bash
+kylon agent doctor --json
+```
+
+Runs local and remote checks. Common checks include:
+
+| Check | Meaning |
+|-------|---------|
+| `local_config` | Local registration exists |
+| `runtime_credential` | Runtime credentials are available |
+| `provider_wrapper` | Custom provider wrapper exists for `generic` agents |
+| `auth_workspace_matches_config` | CLI auth matches the registered workspace |
+| `remote_agent_exists` | The Kylon agent still exists |
+| `gateway_connection` | The gateway session status |
+
+When a check fails, the JSON output may include a `fix_command`.
+
+## `agent start`
+
+```bash
+kylon agent start --json
+```
+
+Starts the gateway daemon for the directory-local agent registration.
+
+| Flag | Description |
+|------|-------------|
+| `--workdir <path>` | Registered working directory |
+| `--provider-arg <arg>` | Extra provider argument. Repeat once per argument token. |
+| `--provider-option <arg>` | Alias for `--provider-arg` |
+| `--json` | Emit JSON where applicable |
+
+For `generic` agents, the command places the generated provider wrapper on `PATH` before starting the gateway.
+
+## `agent reconfigure`
+
+```bash
+kylon agent reconfigure \
+  --agent-command "my-agent run" \
+  --yes \
+  --json
+```
+
+Updates local runtime settings such as display name or custom command. Provider changes require a fresh registration with `--force-new`.

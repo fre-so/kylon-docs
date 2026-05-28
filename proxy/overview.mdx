@@ -1,0 +1,86 @@
+---
+title: Proxy Overview
+description: Use Kylon proxy APIs for tools, model providers, and supported data providers.
+---
+
+The Kylon proxy is the stable API surface for agents that need to call connected tools, model providers, or supported external data providers.
+
+All proxy endpoints share the same public contract:
+
+- Authenticate with a Kylon API key
+- Check workspace permissions and provider access
+- Attribute usage to the workspace and agent
+- Check credits before the request when required
+- Record request status, usage, and errors
+- Return provider-compatible responses where possible
+
+## Base URL
+
+```text
+https://api.kylon.io
+```
+
+Proxy routes are mounted under:
+
+```text
+/proxy
+```
+
+## Main endpoint families
+
+| Family | Purpose |
+|--------|---------|
+| `/proxy/tools/*` | Search toolkits, start auth, inspect tools, execute connected tools, and proxy native toolkit requests |
+| `/proxy/openai/*` | OpenAI-compatible chat, responses, and image endpoints |
+| `/proxy/anthropic/*` | Anthropic Messages API |
+| `/proxy/anthropic-vertex/*` | Anthropic Messages API through a supported hosted provider route |
+| `/proxy/gemini/*` | Gemini-compatible model and media endpoints |
+| `/proxy/cerebras/*` | Cerebras chat completions |
+| `/proxy/elevenlabs/*` | ElevenLabs-compatible voice endpoints |
+| `/proxy/apify/*` | Apify store, actors, runs, datasets, logs, aborts, and key-value records |
+| `/proxy/apollo/*` | Apollo people, company, organization, and news endpoints |
+| `/proxy/fastmoss/*` | FastMoss creator, shop, product, video, and live endpoints |
+| `/proxy/flightradar24/*` | Flight position, summary, track, event, airline, and airport endpoints |
+| `/proxy/logo-dev/*` | Logo lookup, search, and company description |
+| `/proxy/places/*` | Places autocomplete, search, nearby, directions, details, photo, and resolve endpoints |
+| `/proxy/scrapecreators/*` | Instagram and TikTok profile, post, video, search, song, comment, and transcript endpoints |
+
+## Typical tools workflow
+
+```text
+1. Search toolkits          GET  /proxy/tools/search?keywords=gmail
+2. Start auth               POST /proxy/tools/auth
+3. User completes OAuth     Open returned redirect URL
+4. Verify connection        GET  /proxy/tools/connections
+5. Inspect tools            GET  /proxy/tools/toolkit/gmail
+6. Execute tool             POST /proxy/tools/execute
+```
+
+## Typical model proxy workflow
+
+```bash
+curl -s https://api.kylon.io/proxy/openai/v1/responses \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-4o",
+    "input": "Write a concise project update."
+  }'
+```
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Proxy Authentication" icon="key" href="/proxy/authentication">
+    API keys, headers, and request attribution.
+  </Card>
+  <Card title="Tools API" icon="wrench" href="/proxy/tools-api">
+    Toolkit search, auth, execution, native proxy, and upload endpoints.
+  </Card>
+  <Card title="Model APIs" icon="sparkles" href="/proxy/model-apis">
+    OpenAI, Anthropic, Gemini, Cerebras, and ElevenLabs proxy routes.
+  </Card>
+  <Card title="Billing" icon="credit-card" href="/proxy/billing">
+    Credit checks and usage accounting.
+  </Card>
+</CardGroup>

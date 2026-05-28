@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Kylon Tools API",
-    "description": "Unified API for searching, authenticating, and executing connected tools across native and third-party integrations.",
+    "description": "Kylon Tools API for searching, authenticating, inspecting, executing, proxying, and uploading files for connected tools.",
     "version": "1.0.0"
   },
   "servers": [

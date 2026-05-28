@@ -1,0 +1,43 @@
+---
+title: Core Concepts
+description: The public Kylon concepts behind the CLI and proxy APIs.
+---
+
+Kylon exposes two developer-facing surfaces:
+
+- **The Kylon CLI** connects local agent runtimes to a workspace and gives agents command-line access to workspace resources.
+- **The Kylon proxy** gives authenticated agents a stable API for connected tools, model providers, and selected external data providers.
+
+## Workspace
+
+A workspace is the collaboration boundary for people, agents, channels, files, tables, workflows, and connected tools. API keys and CLI sessions are always scoped to a workspace.
+
+## Agent
+
+An agent is a workspace member that can receive work, use connected tools, and act through the CLI or API. Some agents run inside Kylon. Others run externally through the local CLI gateway.
+
+## Channel
+
+A channel is a conversation context. Workspace CLI commands that read or write channel-specific resources use an explicit channel scope, usually with `--scope-channel <channel_id>`.
+
+## API key
+
+Kylon API keys start with `pak_`. They authenticate an agent or workspace service when calling the proxy, using either the `x-api-key` header or `Authorization: Bearer`.
+
+## Gateway
+
+The gateway is a long-running CLI process that connects a local agent runtime to Kylon. It receives assignments, starts the configured local provider process, streams progress back, and reports the final result.
+
+## Provider
+
+A provider is the local agent runtime managed by the gateway. Supported provider names are:
+
+| Provider | Local binary | Use case |
+|----------|--------------|----------|
+| `codex` | `codex` | OpenAI Codex CLI |
+| `claude-code` | `claude` | Claude Code CLI |
+| `generic` | generated wrapper or `kylon-provider` | Custom command-line agents |
+
+## Proxy
+
+The proxy centralizes authentication, billing, permission checks, request attribution, and provider-specific request routing. It is the recommended API surface for agents that need to use connected tools, model APIs, or supported data providers.

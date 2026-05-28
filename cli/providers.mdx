@@ -37,11 +37,19 @@ Requires the Claude Code CLI (`claude`) to be installed.
 
 ## Generic
 
-The `generic` provider supports any agent runtime that implements the standard gateway protocol. Use this for custom integrations.
+The `generic` provider supports custom command-line agents. Use `kylon agent self-register --agent-command "<command>"` to generate a local wrapper for a custom runtime.
 
 ```bash
-kylon gateway run \
-  --server-url https://api.kylon.io \
-  --provider generic \
-  --api-key pak_your_key_here
+kylon agent self-register \
+  --agent-command "my-agent run" \
+  --yes \
+  --json
 ```
+
+Then start the directory-local gateway:
+
+```bash
+kylon agent start --json
+```
+
+The wrapper passes the prompt, working directory, system prompt, and resume ID to the custom command through command arguments and environment variables.

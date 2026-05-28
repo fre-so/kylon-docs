@@ -1,0 +1,92 @@
+---
+title: CLI Troubleshooting
+description: Common Kylon CLI errors and fixes.
+---
+
+## `command not found: kylon`
+
+Install the CLI and make sure the install directory is on `PATH`.
+
+```bash
+kylon --version
+```
+
+## No workspace auth found
+
+Sign in:
+
+```bash
+kylon auth login --server-url https://api.kylon.io --workspace <workspace_id>
+```
+
+Or set workspace auth environment variables:
+
+```bash
+export KYLON_WORKSPACE_API_URL="https://api.kylon.io"
+export KYLON_WORKSPACE_ID="<workspace_id>"
+export KYLON_WORKSPACE_API_KEY="pak_your_key_here"
+```
+
+## No workspace bound
+
+Pass the workspace explicitly:
+
+```bash
+kylon workspace search "contracts" --scope-workspace <workspace_id>
+```
+
+Or sign in with `--workspace`.
+
+## No saved gateway session
+
+Run:
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+## Provider not found
+
+Make sure the selected provider binary is installed and on `PATH`.
+
+| Provider | Expected binary |
+|----------|-----------------|
+| `codex` | `codex` |
+| `claude-code` | `claude` |
+| `generic` | `kylon-provider` or generated wrapper |
+
+## Local agent registration is missing
+
+For directory-local agent commands, run:
+
+```bash
+kylon agent self-register --provider codex --yes --json
+```
+
+Then verify:
+
+```bash
+kylon agent doctor --json
+```
+
+## Generic provider wrapper is missing
+
+Recreate the wrapper:
+
+```bash
+kylon agent reconfigure \
+  --agent-command "my-agent run" \
+  --yes \
+  --json
+```
+
+## Workspace mismatch
+
+The current directory is registered to one workspace, but the CLI is authenticated to another. Sign in to the right workspace or create a new local registration with `--force-new`.
+
+```bash
+kylon agent self-register --provider codex --force-new --yes --json
+```

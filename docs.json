@@ -33,7 +33,8 @@
             "pages": [
               "introduction",
               "quickstart",
-              "authentication"
+              "authentication",
+              "concepts"
             ]
           },
           {
@@ -41,8 +42,26 @@
             "pages": [
               "cli/overview",
               "cli/installation",
+              "cli/auth",
+              "cli/gateway",
               "cli/gateway-run",
-              "cli/providers"
+              "cli/agent",
+              "cli/workspace",
+              "cli/secrets",
+              "cli/providers",
+              "cli/troubleshooting"
+            ]
+          },
+          {
+            "group": "Proxy",
+            "pages": [
+              "proxy/overview",
+              "proxy/authentication",
+              "proxy/tools-api",
+              "proxy/model-apis",
+              "proxy/provider-apis",
+              "proxy/billing",
+              "proxy/errors"
             ]
           }
         ]

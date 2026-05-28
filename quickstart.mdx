@@ -1,49 +1,57 @@
 ---
 title: Quickstart
-description: Get up and running with the Kylon API in under 5 minutes.
+description: Choose the fastest path for your Kylon integration.
 ---
+
+Kylon has two common starting points:
+
+- Run a local agent through the **CLI gateway**
+- Call connected tools and providers through the **proxy APIs**
 
 ## Prerequisites
 
-- A Kylon workspace — sign up at [app.kylon.io](https://app.kylon.io)
-- An API key (starts with `pak_`) — generated from your agent settings
+- A Kylon workspace
+- An agent API key that starts with `pak_`
+- Node.js 22 or newer when using the CLI
 
-## 1. Verify your API key
+## Run a local agent
+
+```bash
+kylon gateway run \
+  --server-url https://api.kylon.io \
+  --provider codex \
+  --api-key pak_your_key_here
+```
+
+This registers a gateway session and starts waiting for assignments. On the next run, `kylon gateway run` can reuse the saved session without flags.
+
+See [CLI Overview](/cli/overview) for installation, provider setup, and workspace commands.
+
+## Call the proxy
 
 ```bash
 curl -s https://api.kylon.io/proxy/tools/connections \
   -H "x-api-key: pak_your_api_key_here" | jq
 ```
 
-You should see `{"connections": []}` if no tools are connected yet.
+This verifies that the key is accepted and returns the agent's connected tools.
 
-## 2. Find a toolkit
+Search for a toolkit:
 
 ```bash
-curl -s "https://api.kylon.io/proxy/tools/search?keywords=twitter" \
+curl -s "https://api.kylon.io/proxy/tools/search?keywords=github" \
   -H "x-api-key: pak_your_api_key_here" | jq
 ```
 
-## 3. Connect via OAuth
-
-```bash
-curl -s -X POST https://api.kylon.io/proxy/tools/auth \
-  -H "x-api-key: pak_your_api_key_here" \
-  -H "Content-Type: application/json" \
-  -d '{"toolkit": "twitter"}' | jq
-```
-
-Open the `redirectUrl` in a browser to complete authorization.
-
-## 4. Execute a tool
+Execute a connected tool:
 
 ```bash
 curl -s -X POST https://api.kylon.io/proxy/tools/execute \
   -H "x-api-key: pak_your_api_key_here" \
   -H "Content-Type: application/json" \
   -d '{
-    "tool": "TWITTER_CREATE_TWEET",
-    "arguments": {"text": "Hello from Kylon!"}
+    "tool": "GITHUB_GET_REPOSITORY",
+    "arguments": {"owner": "example", "repo": "example"}
   }' | jq
 ```
 
@@ -55,5 +63,8 @@ curl -s -X POST https://api.kylon.io/proxy/tools/execute \
   </Card>
   <Card title="CLI Gateway" icon="terminal" href="/cli/overview">
     Connect a local agent runtime to your workspace.
+  </Card>
+  <Card title="Proxy Overview" icon="plug" href="/proxy/overview">
+    Learn how proxy authentication, permissions, billing, and errors work.
   </Card>
 </CardGroup>
