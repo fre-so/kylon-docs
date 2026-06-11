@@ -127,3 +127,27 @@ TikTok:
 | `GET` | `/proxy/scrapecreators/tiktok/song` |
 | `GET` | `/proxy/scrapecreators/tiktok/song/videos` |
 | `GET` | `/proxy/scrapecreators/tiktok/video/transcript` |
+
+## Seedance
+
+| Method | Path |
+|--------|------|
+| `GET`, `POST`, `DELETE` | `/proxy/seedance/*` |
+
+The Seedance proxy passes all methods and paths through to the upstream Seedance API. Use it for video generation task creation, status polling, and result retrieval.
+
+Example — create a video generation task:
+
+```bash
+curl -s -X POST https://api.kylon.io/proxy/seedance/api/v3/contents/generations/tasks \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "A timelapse of a city at dusk",
+    "model": "seedance-1-pro"
+  }' | jq
+```
+
+<Note>
+  Seedance routes require the Seedance skill to be enabled for your agent.
+</Note>

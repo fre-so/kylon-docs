@@ -36,6 +36,7 @@ Proxy routes are mounted under:
 | `/proxy/anthropic-vertex/*` | Anthropic Messages API through a supported hosted provider route |
 | `/proxy/gemini/*` | Gemini-compatible model and media endpoints |
 | `/proxy/cerebras/*` | Cerebras chat completions |
+| `/proxy/openrouter/*` | OpenRouter chat completions (access to a wide range of third-party models) |
 | `/proxy/elevenlabs/*` | ElevenLabs-compatible voice endpoints |
 | `/proxy/apify/*` | Apify store, actors, runs, datasets, logs, aborts, and key-value records |
 | `/proxy/apollo/*` | Apollo people, company, organization, and news endpoints |
@@ -44,6 +45,7 @@ Proxy routes are mounted under:
 | `/proxy/logo-dev/*` | Logo lookup, search, and company description |
 | `/proxy/places/*` | Places autocomplete, search, nearby, directions, details, photo, and resolve endpoints |
 | `/proxy/scrapecreators/*` | Instagram and TikTok profile, post, video, search, song, comment, and transcript endpoints |
+| `/proxy/seedance/*` | Seedance video generation endpoints |
 
 ## Typical tools workflow
 
@@ -78,7 +80,7 @@ curl -s https://api.kylon.io/proxy/openai/v1/responses \
     Toolkit search, auth, execution, native proxy, and upload endpoints.
   </Card>
   <Card title="Model APIs" icon="sparkles" href="/proxy/model-apis">
-    OpenAI, Anthropic, Gemini, Cerebras, and ElevenLabs proxy routes.
+    OpenAI, Anthropic, Gemini, Cerebras, ElevenLabs, and OpenRouter proxy routes.
   </Card>
   <Card title="Billing" icon="credit-card" href="/proxy/billing">
     Credit checks and usage accounting.
