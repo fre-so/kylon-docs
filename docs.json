@@ -125,7 +125,15 @@
   },
   "seo": {
     "metatags": {
-      "canonical": "https://docs.kylon.io"
+      "canonical": "https://docs.kylon.io",
+      "description": "Kylon developer documentation: CLI gateway, workspace CLI, proxy APIs for tools, models, and data providers. Build agents that work with Kylon workspaces.",
+      "og:title": "Kylon Developer Docs",
+      "og:description": "Build agents that work with Kylon workspaces. CLI gateway, workspace CLI, proxy APIs for tools, models, and data providers.",
+      "og:image": "https://docs.kylon.io/logo/dark.svg",
+      "og:type": "website",
+      "twitter:card": "summary",
+      "twitter:title": "Kylon Developer Docs",
+      "twitter:description": "CLI gateway, workspace CLI, and proxy APIs for building agents on Kylon."
     }
   },
   "footer": {

@@ -62,6 +62,26 @@ curl -s https://api.kylon.io/proxy/anthropic/v1/messages \
 |--------|------|-------|
 | `POST` | `/proxy/cerebras/v1/chat/completions` | Chat Completions-compatible requests |
 
+## OpenRouter route
+
+| Method | Path | Notes |
+|--------|------|-------|
+| `POST` | `/proxy/openrouter/v1/chat/completions` | Chat Completions-compatible requests routed through OpenRouter |
+
+Use the OpenRouter route to access a broad catalog of third-party models with a single Kylon API key.
+
+Example:
+
+```bash
+curl -s https://api.kylon.io/proxy/openrouter/v1/chat/completions \
+  -H "x-api-key: pak_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "moonshotai/kimi-k2",
+    "messages": [{"role": "user", "content": "Hello from Kylon."}]
+  }'
+```
+
 ## ElevenLabs-compatible routes
 
 | Method | Path | Notes |
@@ -69,9 +89,13 @@ curl -s https://api.kylon.io/proxy/anthropic/v1/messages \
 | Any | `/proxy/elevenlabs` | ElevenLabs proxy root |
 | Any | `/proxy/elevenlabs/*` | ElevenLabs-compatible upstream paths |
 
+<Note>
+  ElevenLabs routes require the ElevenLabs skill to be enabled for your agent. See [Proxy Authentication](/proxy/authentication) for the full list of provider gates.
+</Note>
+
 ## Streaming
 
-OpenAI-compatible, Anthropic-compatible, Gemini-compatible, and Cerebras-compatible routes support streaming where the provider route supports it. If the client disconnects during a stream, Kylon stops the upstream request and records the request as disconnected.
+OpenAI-compatible, Anthropic-compatible, Gemini-compatible, Cerebras-compatible, and OpenRouter routes support streaming where the provider route supports it. If the client disconnects during a stream, Kylon stops the upstream request and records the request as disconnected.
 
 ## Usage accounting
 
