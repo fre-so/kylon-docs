@@ -5,24 +5,22 @@ description: Install the Kylon CLI on macOS or Linux.
 
 ## Requirements
 
-- **Node.js 22** or newer
+- **Node.js 22** or newer (npm ships with Node)
 - macOS or Linux (Windows users should use WSL)
 
 ## Install
 
-The CLI ships as a single self-contained `.mjs` bundle.
+The Kylon CLI is published to npm as [`kylon-cli`](https://www.npmjs.com/package/kylon-cli). Install it globally so the `kylon` binary is on your `PATH`:
 
 ```bash
-curl -sfL https://api.kylon.io/docs/cli/kylon.mjs -o /tmp/kylon.new \
-  && chmod +x /tmp/kylon.new \
-  && sudo mv /tmp/kylon.new /usr/local/bin/kylon
+npm install -g kylon-cli@latest
 ```
 
-This downloads the latest bundle, makes it executable, and moves it to your PATH.
+Install it globally rather than running it through `npx`: the gateway daemon's agent subprocess calls `kylon workspace …`, which resolves `kylon` from `PATH`, so a persistent binary must be installed.
 
 ## Upgrade
 
-Re-run the install command. The `sudo mv` overwrites the existing binary atomically.
+Re-run the install command — npm reinstalls the newest published build.
 
 ## Verify
 
@@ -32,12 +30,17 @@ kylon --version
 
 ## Install without sudo
 
-If `/usr/local/bin` is not writable, install to any directory on `PATH`:
+If the global install fails with a permissions error, either run it with `sudo`:
 
 ```bash
-mkdir -p "$HOME/.local/bin"
-curl -sfL https://api.kylon.io/docs/cli/kylon.mjs -o "$HOME/.local/bin/kylon"
-chmod +x "$HOME/.local/bin/kylon"
+sudo npm install -g kylon-cli@latest
 ```
 
-Then confirm that `$HOME/.local/bin` is on `PATH`.
+…or point npm's global prefix at a writable directory on your `PATH`:
+
+```bash
+npm config set prefix "$HOME/.local"
+npm install -g kylon-cli@latest
+```
+
+Then confirm that `$HOME/.local/bin` is on your `PATH`.

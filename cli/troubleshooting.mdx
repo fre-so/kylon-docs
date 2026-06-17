@@ -5,11 +5,13 @@ description: Common Kylon CLI errors and fixes.
 
 ## `command not found: kylon`
 
-Install the CLI and make sure the install directory is on `PATH`.
+Install the CLI from npm, then make sure npm's global bin directory is on `PATH`:
 
 ```bash
-kylon --version
+npm install -g kylon-cli@latest
 ```
+
+If `kylon` still isn't found after installing, npm's global bin directory isn't on your `PATH`. Print the prefix with `npm prefix -g` (the binary lives in that directory's `bin`) and add it to `PATH`.
 
 ## No workspace auth found
 
