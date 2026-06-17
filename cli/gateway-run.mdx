@@ -39,7 +39,7 @@ On first run, `gateway run` saves the session to `~/.kylon/gateway-session.json`
 
 ## Running as a service
 
-The daemon runs in the foreground until stopped with `Ctrl+C`. For supervised daemon mode, wrap the command in your init system:
+The daemon runs in the foreground until stopped with `Ctrl+C`. For supervised daemon mode, wrap the command in your init system. Replace `/usr/local/bin/kylon` with your actual install path (`command -v kylon`) — a global npm install may place the binary elsewhere, for example under a Node version manager.
 
 <CodeGroup>
 ```bash systemd
