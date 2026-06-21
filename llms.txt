@@ -27,6 +27,7 @@
 - [Proxy Overview](https://docs.kylon.io/proxy/overview): All proxy endpoint families, base URL, and typical workflows for tools and model calls.
 - [Proxy Authentication](https://docs.kylon.io/proxy/authentication): API key headers, key types, request attribution headers, and per-provider skill requirements.
 - [Tools API](https://docs.kylon.io/proxy/tools-api): Search toolkits, authorize, inspect tools, execute, proxy native requests, and upload media.
+- [App Connection API](https://docs.kylon.io/proxy/app-connections): Use source-agent connections from server-side generated App code, including visitor-authenticated App connection endpoints.
 - [Model APIs](https://docs.kylon.io/proxy/model-apis): OpenAI, Anthropic, Gemini, Cerebras, ElevenLabs, and OpenRouter compatible model proxy routes.
 - [Provider APIs](https://docs.kylon.io/proxy/provider-apis): Non-model provider routes — Apify, Apollo, FastMoss, Flightradar24, Logo.dev, Places, ScrapeCreators, Seedance.
 - [Proxy Billing](https://docs.kylon.io/proxy/billing): Credit preflight checks, fixed-cost vs dynamic-cost accounting, streaming, and error recording.

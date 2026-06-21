@@ -58,6 +58,7 @@
               "proxy/overview",
               "proxy/authentication",
               "proxy/tools-api",
+              "proxy/app-connections",
               "proxy/model-apis",
               "proxy/provider-apis",
               "proxy/billing",

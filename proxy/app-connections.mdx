@@ -1,0 +1,175 @@
+---
+title: App Connection API
+description: Use source-agent connections from server-side generated App code.
+---
+
+Generated Kylon Apps can call connection-backed APIs from server-side App code.
+Use this when an App needs to read or update data through the same connections
+the source agent can use, such as Gmail, Google Calendar, Google Drive, Slack,
+Notion, or another linked integration.
+
+## Connection access surfaces
+
+| Use case | Recommended surface |
+|----------|---------------------|
+| The agent is working in chat | Built-in tools: `list_connections`, `search_connection_tools`, and `execute_connection_tool` |
+| The agent is running code, a script, workflow, or automation | `/proxy/tools/*` with `KYLON_API_TOKEN` |
+| A generated App needs connection data | `/api/build-apps/{app_id}/connections/*` from server-side App code |
+
+Do not expose `KYLON_API_TOKEN` or connection data fetches directly in browser
+client code. Put connection calls behind an App server route or server action.
+
+## App endpoint model
+
+App connection endpoints are mounted on the main Kylon API base:
+
+```text
+{KYLON_API_BASE}/api/build-apps/{KYLON_APP_ID}/connections
+```
+
+Generated Apps receive these environment variables after deployment:
+
+| Variable | Purpose |
+|----------|---------|
+| `KYLON_API_BASE` | Main Kylon API base URL |
+| `KYLON_APP_ID` | Current App project ID |
+| `KYLON_API_TOKEN` | Source agent API key for server-side agent proxy calls |
+
+The App connection endpoints are visitor-authenticated. When a browser user
+opens an App, Kylon's generated App middleware creates a `p2-app-{app_id}`
+auth cookie after checking the App's visibility and user access. Server-side App
+code should forward the incoming request cookie when calling the App connection
+endpoints.
+
+<Warning>
+  Keep `KYLON_API_TOKEN` server-side only. It can be useful when server-side App
+  code needs the agent-level `/proxy/tools/*` API, but it should never be sent
+  to the browser.
+</Warning>
+
+## List source-agent connections
+
+```ts
+export async function GET(request: Request) {
+  const apiBase = process.env.KYLON_API_BASE;
+  const appId = process.env.KYLON_APP_ID;
+
+  const response = await fetch(`${apiBase}/api/build-apps/${appId}/connections`, {
+    headers: {
+      cookie: request.headers.get("cookie") ?? "",
+    },
+    cache: "no-store",
+  });
+
+  return Response.json(await response.json(), { status: response.status });
+}
+```
+
+The response contains the connections linked to the App's source agent:
+
+```json
+{
+  "connections": [
+    {
+      "connection_id": "conn_123",
+      "backend": "composio",
+      "toolkit": "gmail",
+      "remote_user": "person@example.com",
+      "label": "Work Gmail",
+      "created_at": "2026-06-21T15:00:00.000Z"
+    }
+  ]
+}
+```
+
+## Execute a connection tool
+
+Use the exact tool slug and schema-shaped arguments returned by tool discovery.
+For generated Apps, the agent should normally discover the correct slug while
+building the App by using `search_connection_tools` or the `/proxy/tools`
+toolkit search endpoints.
+
+```ts
+export async function POST(request: Request) {
+  const apiBase = process.env.KYLON_API_BASE;
+  const appId = process.env.KYLON_APP_ID;
+  const { connectionId, tool, args } = await request.json();
+
+  const response = await fetch(
+    `${apiBase}/api/build-apps/${appId}/connections/${connectionId}/tools/execute`,
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        cookie: request.headers.get("cookie") ?? "",
+      },
+      body: JSON.stringify({
+        tool,
+        arguments: args ?? {},
+      }),
+      cache: "no-store",
+    },
+  );
+
+  return Response.json(await response.json(), { status: response.status });
+}
+```
+
+Request body:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `tool` | Yes | Exact connection tool slug |
+| `arguments` | No | Tool input object matching the tool schema |
+
+## Native connection proxy
+
+For supported native toolkits, server-side App code can proxy an HTTP request
+through the linked connection:
+
+```ts
+await fetch(`${apiBase}/api/build-apps/${appId}/connections/${connectionId}/proxy`, {
+  method: "POST",
+  headers: {
+    "content-type": "application/json",
+    cookie: request.headers.get("cookie") ?? "",
+  },
+  body: JSON.stringify({
+    toolkit: "github",
+    method: "GET",
+    url: "https://api.github.com/user/repos",
+  }),
+  cache: "no-store",
+});
+```
+
+Request body:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `toolkit` | Yes | Toolkit slug |
+| `method` | Yes | HTTP method |
+| `url` | Yes | Target provider URL |
+| `headers` | No | Additional request headers |
+| `body` | No | Request body |
+
+<Note>
+  Hosted provider connections, including Composio-backed connections, usually
+  do not support arbitrary raw provider URLs. Use tool execution unless the
+  toolkit is documented as native proxy-capable.
+</Note>
+
+## Safety model
+
+App connection access follows the existing App permission model:
+
+- The App can only see connections linked to its source agent.
+- The App visitor must pass the App's auth and visibility checks.
+- Provider credentials are not returned to the App.
+- Responses are marked `no-store`.
+- Server-side App code is responsible for not returning sensitive provider data
+  to viewers who should not see it.
+
+If an App becomes visible to more users, connection-backed App routes can also
+be reached by that broader audience. Review server-side routes before changing
+App visibility.
