@@ -5,6 +5,26 @@ description: Search, authorize, inspect, execute, proxy, and upload through Kylo
 
 The Tools API is the primary proxy surface for connected integrations.
 
+## When to use this API
+
+Agents can use connected integrations in three ways:
+
+| Surface | Best for | How access is checked |
+|---------|----------|-----------------------|
+| Built-in agent tools | Short interactive work in chat, such as listing connections, finding a tool, or making a small number of calls | The agent's linked connections |
+| `/proxy/tools/*` | Agent code, scripts, workflows, and automations that need programmatic connection access | The API key's agent and that agent's linked connections |
+| App connection endpoints | Server-side code in generated Kylon Apps that needs the App's source-agent connections | The App auth token, App visibility, and source-agent linked connections |
+
+For generated Apps, use the dedicated App connection endpoints instead of
+calling `/proxy/tools/*` from browser code. See [App Connection API](/proxy/app-connections).
+
+<Note>
+  Connections are provider-mediated capabilities. Most hosted connections,
+  including common Google Workspace connections, should be called through
+  connection tools such as `/proxy/tools/execute`. Use the native HTTP proxy
+  endpoint only for supported native toolkits.
+</Note>
+
 ## List connections
 
 ```bash
