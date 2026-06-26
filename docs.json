@@ -53,6 +53,12 @@
             ]
           },
           {
+            "group": "Connections",
+            "pages": [
+              "connections/line-official-account"
+            ]
+          },
+          {
             "group": "Proxy",
             "pages": [
               "proxy/overview",
