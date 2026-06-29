@@ -3,7 +3,7 @@ title: Connect a LINE Official Account
 description: Set up a LINE Messaging API channel so Kylon can receive new LINE messages through a verified webhook.
 ---
 
-Kylon connects to LINE through a bring-your-own LINE Official Account. You provide the channel's **Channel Secret** and **Channel Access Token**, then paste Kylon's generated webhook URL into the LINE Developers Console.
+Kylon connects to LINE through a bring-your-own LINE Official Account. You provide the channel's **Channel Secret** so Kylon can verify incoming webhooks. You can also provide a **Channel Access Token** if you want Kylon to register the webhook URL in LINE automatically and use LINE Messaging API features such as media downloads.
 
 Use this guide when you are setting up the `LINE Official Account` connection from an agent's Connections page.
 
@@ -78,20 +78,26 @@ In Kylon, open the target agent, go to **Connections**, choose **LINE Official A
 | --- | --- | --- |
 | Label | Your choice | Use a label such as `Support LINE` or the official account name. |
 | Target channel | Kylon workspace channel | New LINE webhook messages are routed to this channel. |
-| Channel Secret | LINE Developers Console, channel, **Basic settings** | LINE uses this secret to sign webhook requests. Kylon verifies the `x-line-signature` header using HMAC-SHA256, matching LINE's [webhook signature verification](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/) docs. |
-| Channel Access Token | LINE Developers Console, channel, **Messaging API** | This token authorizes Messaging API calls. LINE describes channel access tokens in the [channel access token guide](https://developers.line.biz/en/docs/basics/channel-access-token/). |
+| Channel Secret | LINE Official Account Manager, **Settings** > **Messaging API**, or LINE Developers Console, channel, **Basic settings** | Required. LINE uses this secret to sign webhook requests. Kylon verifies the `x-line-signature` header using HMAC-SHA256, matching LINE's [webhook signature verification](https://developers.line.biz/en/docs/messaging-api/verify-webhook-signature/) docs. |
+| Channel Access Token | LINE Developers Console, channel, **Messaging API** | Optional. This token authorizes Messaging API calls. Provide it if you want Kylon to register the webhook automatically and use LINE-hosted media APIs. LINE describes channel access tokens in the [channel access token guide](https://developers.line.biz/en/docs/basics/channel-access-token/). |
 
 Do not paste the numeric Channel ID into either credential field.
 
 <Warning>
-  The Channel Secret and Channel Access Token are different values. A Channel Secret is commonly a 32-character value from Basic settings. A Channel Access Token is an opaque token from the Messaging API tab and is usually much longer.
+  The Channel Secret, Channel ID, and Channel Access Token are different values. A Channel Secret is commonly a 32-character value from Basic settings. A Channel ID is numeric. A Channel Access Token is an opaque token from the Messaging API tab and is usually much longer.
 </Warning>
 
-After you submit the Kylon form, Kylon returns a webhook URL. Copy it before closing the dialog.
+<Note>
+  The Channel Access Token is not shown in LINE Official Account Manager. From the official account's **Messaging API** settings, open the linked LINE Developers Console, select the same Messaging API channel by matching the Channel ID, then use the **Messaging API** tab to issue or copy a Channel Access Token.
+</Note>
+
+After you submit the Kylon form, Kylon returns a webhook URL. If you did not provide a Channel Access Token, copy the webhook URL before closing the dialog.
 
 ## Configure the LINE webhook
 
-In the LINE Developers Console, open the same Messaging API channel and go to the **Messaging API** tab.
+If you provided a Channel Access Token and Kylon reports that the LINE webhook was registered successfully, no manual URL paste is needed. In the LINE Developers Console, open the same Messaging API channel, go to the **Messaging API** tab, and confirm **Use webhook** is enabled.
+
+If you left the Channel Access Token blank, configure the webhook manually:
 
 <Steps>
   <Step title="Paste the Kylon webhook URL">
@@ -135,7 +141,9 @@ For provider-level event shapes and Messaging API behavior, refer to LINE's [Mes
 | Symptom | Check |
 | --- | --- |
 | Kylon rejects setup with "Channel Secret looks like a Channel ID" | You pasted the numeric Channel ID. Use the Channel Secret from **Basic settings**. |
+| Kylon rejects setup with "Channel Access Token looks like a Channel ID" | You pasted the numeric Channel ID into the optional token field. Leave the token blank for manual webhook setup, or use the Channel Access Token from the LINE Developers Console's **Messaging API** tab. |
 | Kylon rejects setup with "Channel Access Token looks like a Channel Secret" | You pasted the 32-character Channel Secret into the token field. Use a Channel Access Token from **Messaging API**. |
+| You cannot find the Channel Access Token | You are probably viewing LINE Official Account Manager. Open the matching channel in the LINE Developers Console by using the Channel ID, then open the **Messaging API** tab. |
 | LINE Verify fails | Confirm the webhook URL was saved exactly, **Use webhook** can be enabled, the Channel Secret in Kylon belongs to the same channel, and the channel secret was not reissued after setup. |
 | Messages do not appear in Kylon | Confirm **Use webhook** is on, the user has followed or messaged the official account after setup, and the message was sent to the same official account/channel connected in Kylon. |
 | The bot leaves a group after invitation | Enable **Allow bot to join group chats** in the LINE Developers Console's Messaging API tab, then invite the account again. |
